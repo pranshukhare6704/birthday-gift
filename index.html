@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>For Lavanya</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  height: 100vh;
+  overflow: hidden;
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: radial-gradient(circle at top, #1c1c1c, #000);
+  color: white;
+}
+
+/* ---------- SCENES ---------- */
+.scene {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  transition: opacity 1s ease, transform 1s ease;
+}
+.hidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(1.05);
+}
+
+/* ---------- METALLIC TEXT ---------- */
+.metal {
+  font-size: 46px;
+  font-weight: 900;
+  letter-spacing: 8px;
+  background: linear-gradient(
+    120deg,
+    #fdfbfb,
+    #c9a227,
+    #ffd700,
+    #c9a227,
+    #fdfbfb
+  );
+  background-size: 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shine 4s linear infinite;
+}
+@keyframes shine {
+  0% { background-position: 0%; }
+  100% { background-position: 300%; }
+}
+
+/* ---------- BUTTON ---------- */
+.btn {
+  margin-top: 40px;
+  padding: 14px 36px;
+  font-size: 16px;
+  border-radius: 40px;
+  border: 1px solid rgba(255,255,255,0.3);
+  background: rgba(255,255,255,0.06);
+  color: white;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+}
+
+/* ---------- LOADER ---------- */
+.loader-box {
+  width: 260px;
+  height: 6px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 6px;
+  overflow: hidden;
+  margin-top: 30px;
+}
+.loader {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #ff69b4, #ffd1e8);
+  animation: load 3s forwards;
+}
+@keyframes load {
+  to { width: 100%; }
+}
+
+/* ---------- ENERGY ---------- */
+.line {
+  position: absolute;
+  width: 2px;
+  height: 140px;
+  background: linear-gradient(to bottom, transparent, #ff69b4, transparent);
+  animation: fall 2s linear infinite;
+}
+@keyframes fall {
+  from { transform: translateY(-160px); }
+  to { transform: translateY(120vh); }
+}
+
+/* ---------- FINAL ---------- */
+.final {
+  background: linear-gradient(135deg, #ffb6d5, #ffe4f2);
+  color: #5a0030;
+}
+
+.card {
+  background: white;
+  padding: 40px;
+  border-radius: 30px;
+  max-width: 520px;
+  text-align: center;
+  box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+  animation: heartbeat 2.4s ease-in-out infinite;
+}
+
+@keyframes heartbeat {
+  0%,100% { box-shadow: 0 25px 50px rgba(0,0,0,0.3); }
+  50% { box-shadow: 0 30px 70px rgba(255,105,180,0.45); }
+}
+
+/* ---------- NAME ---------- */
+.name span {
+  display: inline-block;
+  font-size: 38px;
+  font-weight: 800;
+  color: #ff1493;
+  opacity: 0;
+  transform: translateY(20px);
+}
+.name span.show {
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 0.4s ease;
+}
+
+/* ---------- TYPEWRITER ---------- */
+.type {
+  font-size: 17px;
+  margin-top: 18px;
+  line-height: 1.6;
+  min-height: 120px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- SCENE 1 -->
+<div class="scene" id="s1">
+  <div class="metal">ENTER</div>
+  <button class="btn" onclick="go(1)">Continue</button>
+</div>
+
+<!-- SCENE 2 -->
+<div class="scene hidden" id="s2">
+  <div class="metal" style="font-size:30px;letter-spacing:4px;">
+    SOME THINGS<br>DESERVE TIME
+  </div>
+  <div class="loader-box">
+    <div class="loader"></div>
+  </div>
+</div>
+
+<!-- SCENE 3 -->
+<div class="scene hidden" id="s3">
+  <div class="metal" style="font-size:28px;">
+    ALMOST THERE…
+  </div>
+</div>
+
+<!-- SCENE 4 -->
+<div class="scene hidden final" id="s4">
+  <div class="card">
+    <h1>🎉 Happy Birthday 🎂</h1>
+
+    <div class="name" id="name"></div>
+
+    <div class="type" id="typed"></div>
+  </div>
+
+  <!-- MUSIC (starts on click) -->
+  <audio id="bgMusic" loop>
+    <source src="https://orangefreesounds.com/wp-content/uploads/2016/08/Happy-birthday-instrumental.mp3" type="audio/mpeg">
+  </audio>
+</div>
+
+<script>
+let musicStarted = false;
+
+function go(n) {
+  // start music on first user interaction
+  if (!musicStarted) {
+    const music = document.getElementById("bgMusic");
+    music.play().catch(() => {});
+    musicStarted = true;
+  }
+
+  document.getElementById(`s${n}`).classList.add("hidden");
+  document.getElementById(`s${n+1}`).classList.remove("hidden");
+
+  if (n === 1) setTimeout(() => go(2), 3200);
+  if (n === 2) {
+    startEnergy();
+    setTimeout(() => go(3), 2200);
+  }
+  if (n === 3) {
+    revealName();
+    typeMessage();
+  }
+}
+
+/* ENERGY */
+function startEnergy() {
+  for (let i = 0; i < 35; i++) {
+    const l = document.createElement("div");
+    l.className = "line";
+    l.style.left = Math.random() * 100 + "vw";
+    l.style.animationDuration = (Math.random() * 1 + 1.5) + "s";
+    document.body.appendChild(l);
+  }
+}
+
+/* NAME REVEAL */
+function revealName() {
+  const name = "LAVANYA";
+  const container = document.getElementById("name");
+  name.split("").forEach((ch, i) => {
+    const span = document.createElement("span");
+    span.textContent = ch;
+    container.appendChild(span);
+    setTimeout(() => span.classList.add("show"), i * 300);
+  });
+}
+
+/* TYPEWRITER */
+const text =
+"You are strong. You are beautiful.\n\n" +
+"May life always protect you and guide you.\n" +
+"We believe in you — today and always.";
+
+let i = 0;
+function typeMessage() {
+  const el = document.getElementById("typed");
+  const interval = setInterval(() => {
+    el.textContent += text[i];
+    i++;
+    if (i >= text.length) clearInterval(interval);
+  }, 45);
+}
+</script>
+
+</body>
+</html>
