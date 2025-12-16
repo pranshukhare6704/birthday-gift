@@ -36,8 +36,8 @@
 <body>
 
 <div class="card">
-    <h1>🎂 Happy Birthday! 🎉</h1>
-    <p>May your day be filled with smiles and joy 💖</p>
+    <h1>🎉 Happy Birthday Lavanya 🎂💖</h1>
+<p>Wishing you a day full of smiles, surprises, and sparkle ✨🎁</p>
     <button onclick="showMessage()">Click for Surprise 🎁</button>
     <p id="msg"></p>
 </div>
@@ -45,9 +45,10 @@
 <script>
     function showMessage() {
         document.getElementById("msg").innerText =
-            "You are smart, special, and loved 🌟";
+            "You are beautiful, strong, and amazing 🌸💃 Keep shining always ✨🎉";
     }
 </script>
 
 </body>
 </html>
+
